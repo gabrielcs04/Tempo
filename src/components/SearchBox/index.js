@@ -3,14 +3,14 @@ import { View, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 
 import { Feather } from '@expo/vector-icons'
 
-export default function SearchBox() {
+export default function SearchBox({ value, placeholder, handleText, handleSearch }) {
     
     return(
         <View style={styles.searchBox}>
             <TextInput 
-                value={input}
-                onChangeText={ (valor) => setInput(valor) }
-                placeholder={'Ex: São Paulo, SP'}
+                value={value}
+                onChangeText={ (valor) => handleText(valor) }
+                placeholder={placeholder}
                 style={styles.input}
             />
 

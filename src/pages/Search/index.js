@@ -1,62 +1,56 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, TextInput, Keyboard } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, Keyboard } from 'react-native';
 
-import { Feather } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient';
 
 import api, { key } from '../../services/api';
 import Conditions from '../../components/Conditions';
-import Backbutton from '../../components/Backbutton';
+import BackButton from '../../components/BackButton';
 import SearchBox from '../../components/SearchBox';
 
 export default function Search() {
 
     const [input, setInput] = useState('');
-    const[city, setCity] = useState(null);
+    const [city, setCity] = useState(null);
     const [error, setError] = useState(null);
 
     const [background, setBackground] = useState(['#1ed6ff', '#97c1ff']);
 
-    async function handleSearch(){
-        const response = await api.get(`/weather?key=${key}&city_name=${input}`)
+    function handleText(valor) {
+        setInput(valor)
+    }
 
-        Keyboard.dismiss();
+    function resetPage() {
         setInput('');
+        setCity(null);
+        Keyboard.dismiss();
+    }
 
-        if(response.data.by === 'default'){
+    async function handleSearch() {
+        const response = await api.get(`/weather?key=${key}&city_name=${input}`)
+        Keyboard.dismiss();
+
+        
+        if (response.data.by === 'default') {
             setError('Humm, cidade não encontrada!');
             setCity(null);
             return;
         }
 
         setCity(response.data);
+        setInput('');
 
-        if(response.data.results.currently === 'noite'){
+        if (response.data.results.currently === 'noite') {
             setBackground(['#0c3741', '#0f2f61']);
         }
     }
 
-    if(city){
-        return(
+    if (city) {
+        return (
             <SafeAreaView style={styles.container}>
-                <Backbutton />
+                <BackButton label={'Voltar'} handlePress={resetPage} pageNavigate={'Home'} />
 
-                <View style={styles.searchBox}>
-                    <TextInput 
-                        value={input}
-                        onChangeText={ (valor) => setInput(valor) }
-                        placeholder={'Ex: São Paulo, SP'}
-                        style={styles.input}
-                    />
-
-                    <TouchableOpacity style={styles.icon} onPress={handleSearch}>
-                        <Feather 
-                            name='search'
-                            size={22}
-                            color='#fff'
-                        />
-                    </TouchableOpacity>
-                </View>
+                <SearchBox value={input} placeholder={'Ex: São Paulo, SP'} handleText={handleText} handleSearch={handleSearch} />
 
                 <LinearGradient
                     style={styles.header}
@@ -70,17 +64,19 @@ export default function Search() {
                         <Text style={styles.description}>{city.results.description}</Text>
                     </View>
 
-                    <Conditions weather={city}/>
+                    <Conditions weather={city} />
                 </LinearGradient>
             </SafeAreaView>
         )
     }
 
-    return(
+    return (
         <SafeAreaView style={styles.container}>
-            <Backbutton />
+            <BackButton handlePress={resetPage} pageNavigate={'Home'} />
 
-            <View style={styles.searchBox}>
+            <SearchBox value={input} placeholder={'Ex: São Paulo, SP'} handleText={handleText} handleSearch={handleSearch} />
+
+            {/* <View style={styles.searchBox}>
                 <TextInput 
                     value={input}
                     onChangeText={ (valor) => setInput(valor) }
@@ -95,7 +91,7 @@ export default function Search() {
                         color='#fff'
                     />
                 </TouchableOpacity>
-            </View>
+            </View> */}
 
             {error && <Text style={{ marginTop: 25, fontSize: 18 }}>{error}</Text>}
         </SafeAreaView>
@@ -103,14 +99,14 @@ export default function Search() {
 }
 
 const styles = StyleSheet.create({
-    container:{
-        flex:1,
+    container: {
+        flex: 1,
         alignItems: 'center',
         paddingTop: '5%',
         backgroundColor: '#e8f0ff',
     },
 
-    searchBox:{
+    searchBox: {
         alignItems: 'center',
         flexDirection: 'row',
         backgroundColor: '#ddd',
@@ -119,7 +115,7 @@ const styles = StyleSheet.create({
         borderRadius: 8
     },
 
-    input:{
+    input: {
         width: '85%',
         height: 50,
         backgroundColor: '#fff',
@@ -128,7 +124,7 @@ const styles = StyleSheet.create({
         padding: 7
     },
 
-    icon:{
+    icon: {
         width: '15%',
         backgroundColor: '#1ed6ff',
         alignItems: 'center',
@@ -138,7 +134,7 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 8
     },
 
-    header:{
+    header: {
         marginTop: '5%',
         width: '90%',
         paddingTop: '5%',
@@ -148,26 +144,26 @@ const styles = StyleSheet.create({
         borderRadius: 8
     },
 
-    date:{
-        color:'#fff',
+    date: {
+        color: '#fff',
         fontSize: 16
     },
 
     city: {
         fontSize: 20,
-        color:'#fff',
+        color: '#fff',
         fontWeight: 'bold'
     },
 
-    temp:{
-        color:'#fff',
+    temp: {
+        color: '#fff',
         fontSize: 90,
         fontWeight: 'bold',
         textAlign: 'center'
     },
 
-    description:{
+    description: {
         fontSize: 20,
-        color:'#fff'
+        color: '#fff'
     }
 });
