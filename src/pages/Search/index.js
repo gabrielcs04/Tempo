@@ -76,23 +76,6 @@ export default function Search() {
 
             <SearchBox value={input} placeholder={'Ex: São Paulo, SP'} handleText={handleText} handleSearch={handleSearch} />
 
-            {/* <View style={styles.searchBox}>
-                <TextInput 
-                    value={input}
-                    onChangeText={ (valor) => setInput(valor) }
-                    placeholder={'Ex: São Paulo, SP'}
-                    style={styles.input}
-                />
-
-                <TouchableOpacity style={styles.icon} onPress={handleSearch}>
-                    <Feather 
-                        name='search'
-                        size={22}
-                        color='#fff'
-                    />
-                </TouchableOpacity>
-            </View> */}
-
             {error && <Text style={{ marginTop: 25, fontSize: 18 }}>{error}</Text>}
         </SafeAreaView>
     )
