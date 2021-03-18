@@ -23,6 +23,7 @@ export default function Search() {
     function resetPage() {
         setInput('');
         setCity(null);
+        setError(null);
         Keyboard.dismiss();
     }
 
